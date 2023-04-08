@@ -2,7 +2,7 @@ const passport = require('passport');
 const FitbitStrategy = require('passport-fitbit-oauth2').FitbitOAuth2Strategy;
 const { NextApiRequest, NextApiResponse } = require('next');
 
-const CALLBACK_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/fitbit/callback`;
+const CALLBACK_URL = `https://stridemaster.netlify.app//api/auth/fitbit/callback`;
 
 passport.serializeUser(function (user, done) {
   done(null, user);
