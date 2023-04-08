@@ -2,7 +2,7 @@ const passport = require('passport');
 const FitbitStrategy = require('passport-fitbit-oauth2').FitbitOAuth2Strategy;
 const { NextApiRequest, NextApiResponse } = require('next');
 
-const CALLBACK_URL = `https://stridemaster.netlify.app//api/auth/fitbit/callback`;
+const CALLBACK_URL = `https://stridemaster.netlify.app/api/auth/fitbit/callback`;
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -25,6 +25,7 @@ passport.use(
       // Typically, you would save the tokens to a database and create a new user
       // in your own database if one doesn't exist yet, or update an existing user's
       // data if they are already registered.
+      console.log(profile, accessToken, refreshToken);
       return done(null, { profile, accessToken, refreshToken });
     }
   )
