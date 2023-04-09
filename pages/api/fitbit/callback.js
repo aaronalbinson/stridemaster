@@ -1,37 +1,43 @@
+import { parse } from 'querystring';
 import axios from 'axios';
+import Cookies from 'cookies';
 
-const handleFitbitCallback = async (req, res) => {
-  const { code } = req.query;
-  const clientId = process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID;
-  const clientSecret = process.env.FITBIT_CLIENT_SECRET;
-  const redirectUri = `${req.headers.origin}/api/fitbit/callback`;
-  console.log(code)
+const redirectUri = process.env.NEXT_PUBLIC_FITBIT_REDIRECT_URI;
+const clientId = process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID;
+const clientSecret = process.env.FITBIT_CLIENT_SECRET;
+
+export default async (req, res) => {
   try {
-    // Exchange authorization code for access token
-    const response = await axios.post('https://api.fitbit.com/oauth2/token', null, {
+    // Retrieve the authorization code from the query string of the callback URL
+    const { query } = req.url;
+    const { code } = parse(query);
+
+    // Exchange the authorization code for an access token using the Fitbit API
+    const response = await axios({
+      method: 'POST',
+      url: 'https://api.fitbit.com/oauth2/token',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+      },
       params: {
         code,
-        client_id: clientId,
-        grant_type: 'authorization_code',
         redirect_uri: redirectUri,
-      },
-      auth: {
-        username: clientId,
-        password: clientSecret,
+        grant_type: 'authorization_code',
       },
     });
 
-    const accessToken = response.data.access_token;
-    const expiresIn = response.data.expires_in;
+    const { access_token: accessToken } = response.data;
 
-    // TODO: Store access token and expiration time in database or session
+    // Store the access token in a cookie or database for future use
+    const cookies = new Cookies(req, res);
+    cookies.set('fitbitAccessToken', accessToken, { httpOnly: true });
 
-    // Redirect user to success page
-    res.redirect('/success');
+    // Redirect the user to a success page
+    res.writeHead(302, { Location: '/success' });
+    res.end();
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error exchanging authorization code for access token');
+    res.status(500).send('An error occurred');
   }
 };
-
-export default handleFitbitCallback;
