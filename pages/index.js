@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import DemoPageLinks from '../components/DemoPageLinks'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import FitbitButton from '../components/fitbitButton';
 
 const styles = {
   content: {
@@ -60,6 +61,7 @@ const Demo = () => {
           </p>
         </div>
         <FitbitConnectButton />
+        <FitbitButton />
         <DemoPageLinks />
       </div>
     </div>
