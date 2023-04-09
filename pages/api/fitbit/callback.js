@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const handleFitbitCallback = async (req, res) => {
   const { code } = req.query;
-  const clientId = process.env.FITBIT_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID;
   const clientSecret = process.env.FITBIT_CLIENT_SECRET;
   const redirectUri = `${req.headers.origin}/api/fitbit/callback`;
 
