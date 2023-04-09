@@ -5,7 +5,7 @@ const handleFitbitCallback = async (req, res) => {
   const clientId = process.env.NEXT_PUBLIC_FITBIT_CLIENT_ID;
   const clientSecret = process.env.FITBIT_CLIENT_SECRET;
   const redirectUri = `${req.headers.origin}/api/fitbit/callback`;
-
+  console.log(code)
   try {
     // Exchange authorization code for access token
     const response = await axios.post('https://api.fitbit.com/oauth2/token', null, {
