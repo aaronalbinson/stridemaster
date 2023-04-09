@@ -12,6 +12,9 @@ export default async (req, res) => {
     const { query } = req.url;
     const { code } = parse(query);
 
+    console.log(query);
+    console.log(code);
+
     // Exchange the authorization code for an access token using the Fitbit API
     const response = await axios({
       method: 'POST',
@@ -37,7 +40,7 @@ export default async (req, res) => {
     res.writeHead(302, { Location: '/success' });
     res.end();
   } catch (error) {
-    console.error(error);
+    console.error(error + code);
     res.status(500).send('An error occurred');
   }
 };
